@@ -67,36 +67,9 @@ export async function fetchTransitData(): Promise<TransitData> {
   const data = await res.json();
 
   // The v6 API may return an array directly or an object with a `departures` key
-   
+
   const raw: any[] = Array.isArray(data) ? data : (data.departures ?? []);
   const now = new Date();
-
-  // ── Departures ────────────────────────────────────────────────────────────────
-  const departures: TransitDeparture[] = raw
-    .slice(0, 10)
-    .map((dep, i) => {
-      const whenDisplay = buildWhenDisplay(
-        dep.plannedWhen ?? null,
-        dep.when ?? null,
-        !!dep.cancelled,
-        now,
-      );
-
-      const delaySec: number | null = dep.delay ?? null;
-      const delayMinutes = delaySec !== null ? Math.round(delaySec / 60) : null;
-
-      return {
-        id: dep.tripId ?? String(i),
-        lineName: dep.line?.name ?? "?",
-        lineProduct: dep.line?.product ?? "suburban",
-        direction: dep.direction ?? "—",
-        whenDisplay,
-        delayMinutes,
-        platform: dep.platform ?? dep.plannedPlatform ?? null,
-        cancelled: !!dep.cancelled,
-      } satisfies TransitDeparture;
-    })
-    .filter((d) => d.lineName !== "?");
 
   // ── Alerts: deduplicated warnings from departure remarks ──────────────────────
   const alertMap = new Map<string, TransitAlert>();
@@ -125,6 +98,33 @@ export async function fetchTransitData(): Promise<TransitData> {
   }
 
   const alerts = Array.from(alertMap.values()).slice(0, 3);
+
+  // ── Departures ────────────────────────────────────────────────────────────────
+  const departures: TransitDeparture[] = raw
+    .slice(0, Math.max(3, 5 - alerts.length)) // show more departures if there are fewer alerts
+    .map((dep, i) => {
+      const whenDisplay = buildWhenDisplay(
+        dep.plannedWhen ?? null,
+        dep.when ?? null,
+        !!dep.cancelled,
+        now,
+      );
+
+      const delaySec: number | null = dep.delay ?? null;
+      const delayMinutes = delaySec !== null ? Math.round(delaySec / 60) : null;
+
+      return {
+        id: dep.tripId ?? String(i),
+        lineName: dep.line?.name ?? "?",
+        lineProduct: dep.line?.product ?? "suburban",
+        direction: dep.direction ?? "—",
+        whenDisplay,
+        delayMinutes,
+        platform: dep.platform ?? dep.plannedPlatform ?? null,
+        cancelled: !!dep.cancelled,
+      } satisfies TransitDeparture;
+    })
+    .filter((d) => d.lineName !== "?");
 
   return { departures, alerts };
 }
