@@ -1,26 +1,84 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ── E-Ink B&W Design System ────────────────────────────────────────────────
+ * All colors are pure grayscale — optimized for Kindle e-ink rendering.
+ * No animations, no color, minimal border-radius for a clean print-like look.
+ * ───────────────────────────────────────────────────────────────────────── */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Layout */
+  --radius: 2px;
+
+  /* Core palette — pure grayscale */
+  --background: oklch(1 0 0);           /* #ffffff — white */
+  --foreground: oklch(0 0 0);           /* #000000 — black */
+
+  --card: oklch(1 0 0);                 /* white */
+  --card-foreground: oklch(0 0 0);      /* black */
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0 0 0);
+
+  --primary: oklch(0 0 0);              /* black */
+  --primary-foreground: oklch(1 0 0);   /* white */
+
+  --secondary: oklch(0.94 0 0);         /* very light gray */
+  --secondary-foreground: oklch(0 0 0);
+
+  --muted: oklch(0.94 0 0);             /* very light gray */
+  --muted-foreground: oklch(0.46 0 0);  /* medium gray */
+
+  --accent: oklch(0.9 0 0);             /* light gray */
+  --accent-foreground: oklch(0 0 0);
+
+  --destructive: oklch(0 0 0);          /* black (no color on eink) */
+
+  --border: oklch(0.82 0 0);            /* #d0d0d0 */
+  --input: oklch(0.82 0 0);
+  --ring: oklch(0.5 0 0);              /* medium gray focus ring */
+}
+
+/* No dark mode — e-ink is always light */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    /* Disable all transitions/animations for static e-ink rendering */
+    transition: none !important;
+    animation: none !important;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 }

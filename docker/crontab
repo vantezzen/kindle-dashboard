@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Capture dashboard and push to Kindle every minute
+* * * * * root . /etc/environment; cd /app && bash main.sh >> /proc/1/fd/1 2>/proc/1/fd/2
