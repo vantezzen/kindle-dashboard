@@ -50,18 +50,18 @@
   --primary: oklch(0 0 0);              /* black */
   --primary-foreground: oklch(1 0 0);   /* white */
 
-  --secondary: oklch(0.94 0 0);         /* very light gray */
+  --secondary: oklch(0.88 0 0);         /* light gray */
   --secondary-foreground: oklch(0 0 0);
 
-  --muted: oklch(0.94 0 0);             /* very light gray */
-  --muted-foreground: oklch(0.46 0 0);  /* medium gray */
+  --muted: oklch(0.88 0 0);             /* light gray */
+  --muted-foreground: oklch(0.28 0 0);  /* dark gray — boosted for e-ink visibility */
 
-  --accent: oklch(0.9 0 0);             /* light gray */
+  --accent: oklch(0.88 0 0);            /* light gray */
   --accent-foreground: oklch(0 0 0);
 
   --destructive: oklch(0 0 0);          /* black (no color on eink) */
 
-  --border: oklch(0.82 0 0);            /* #d0d0d0 */
+  --border: oklch(0.65 0 0);            /* #9e9e9e — darker for visible dividers */
   --input: oklch(0.82 0 0);
   --ring: oklch(0.5 0 0);              /* medium gray focus ring */
 }

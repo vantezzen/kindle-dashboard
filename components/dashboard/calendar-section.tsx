@@ -6,8 +6,8 @@ import type { CalendarDay, CalendarEvent } from "@/lib/types";
 function CalendarIcon() {
   return (
     <svg
-      width={11}
-      height={11}
+      width={17}
+      height={17}
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
@@ -28,22 +28,22 @@ function EventRow({ event }: { event: CalendarEvent }) {
   return (
     <div
       className={cn(
-        "flex items-start justify-center gap-1.5 py-[2.5px] rounded-lg",
+        "flex items-start justify-center gap-2 py-1.5 rounded-lg",
         event.isNow && "bg-secondary px-4 -mx-4",
       )}
     >
       {/* Time */}
-      <span className="font-mono text-[9px] text-muted-foreground w-[34px] shrink-0 pt-px">
+      <span className="font-mono text-[15px] text-muted-foreground w-14 shrink-0 pt-px">
         {event.isAllDay ? "Day" : (event.startTime ?? "—")}
       </span>
 
       {/* Title + location */}
       <div className="flex-1 min-w-0">
-        <div className="text-[9px] font-medium truncate leading-[1.3]">
+        <div className="text-[18px] font-medium truncate leading-[1.3]">
           {event.title}
         </div>
         {event.location && (
-          <div className="text-[8px] text-muted-foreground truncate">
+          <div className="text-[15px] text-muted-foreground truncate">
             {event.location}
           </div>
         )}
@@ -59,11 +59,11 @@ function DayGroup({ day }: { day: CalendarDay }) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-1.5 mb-1.5",
+        "flex flex-col gap-0.5 mb-2",
         isToday && "bg-zinc-100 rounded-lg",
       )}
     >
-      <div className="text-[8px] font-semibold text-muted-foreground uppercase tracking-[1px] pt-1 pb-0.5">
+      <div className="text-[15px] font-semibold text-muted-foreground uppercase tracking-[1px] pt-1.5 pb-0.5">
         {day.label}
       </div>
       {day.events.map((event) => (
@@ -79,9 +79,9 @@ export function CalendarSection({ days }: { days: CalendarDay[] }) {
   const hasEvents = days.some((d) => d.events.length > 0);
 
   return (
-    <div className="flex-1 flex flex-col px-4 py-2.5 overflow-hidden min-w-0">
+    <div className="flex-1 flex flex-col px-4 py-3 overflow-hidden min-w-0">
       {/* Header */}
-      <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-1.5">
+      <div className="flex items-center gap-2 text-[15px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
         <CalendarIcon />
         Schedule
       </div>
@@ -89,7 +89,7 @@ export function CalendarSection({ days }: { days: CalendarDay[] }) {
       {/* Events */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {!hasEvents ? (
-          <div className="text-[9px] text-muted-foreground italic">
+          <div className="text-[15px] text-muted-foreground italic">
             No upcoming events
           </div>
         ) : (
@@ -106,12 +106,12 @@ export function CalendarSection({ days }: { days: CalendarDay[] }) {
 
 export function CalendarSectionFallback() {
   return (
-    <div className="flex-1 px-4 py-2.5">
-      <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-1.5">
+    <div className="flex-1 px-4 py-3">
+      <div className="flex items-center gap-2 text-[15px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
         <CalendarIcon />
         Schedule
       </div>
-      <div className="text-[9px] text-muted-foreground italic">
+      <div className="text-[15px] text-muted-foreground italic">
         Calendar unavailable
       </div>
     </div>

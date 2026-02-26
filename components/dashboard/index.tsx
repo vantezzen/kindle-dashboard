@@ -36,7 +36,6 @@ export default function KindleDashboard({
         width: 600,
         height: 800,
         fontFamily: "var(--font-geist-sans), 'Helvetica Neue', sans-serif",
-        fontSize: 12,
       }}
     >
       {/* ── Header: date + time ───────────────────────────────────────── */}
@@ -71,7 +70,7 @@ export default function KindleDashboard({
       </div> */}
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
-      <div className="flex justify-between px-4 py-1 border-t border-border/60 font-mono text-[8px] text-muted-foreground/60">
+      <div className="flex justify-between px-4 py-1 border-t border-border/60 font-mono text-[12px] text-muted-foreground/60">
         <span>Kindle Dashboard</span>
         <span>Last refresh: {refreshTime}</span>
       </div>

@@ -30,7 +30,6 @@ const MONTHS = [
 ];
 
 export function DashboardHeader({ now }: HeaderProps) {
-  // Parse in local time
   const date = new Date(now);
   const localStr = date.toLocaleString("en-US", {
     timeZone: process.env.NEXT_PUBLIC_TIMEZONE,
@@ -44,19 +43,19 @@ export function DashboardHeader({ now }: HeaderProps) {
   const mm = String(localDate.getMinutes()).padStart(2, "0");
 
   return (
-    <div className="flex items-end justify-between px-4 pt-4 pb-2.5 border-b-2 border-black">
+    <div className="flex items-end justify-between px-5 pt-5 pb-3 border-b-2 border-black">
       {/* Date */}
       <div>
-        <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-0.5">
+        <div className="text-[14px] uppercase tracking-widest text-muted-foreground mb-1">
           {dayName}
         </div>
-        <div className="text-[15px] font-semibold tracking-tight leading-tight">
+        <div className="text-[32px] font-semibold tracking-tight leading-tight">
           {dayNum} {monthName}
         </div>
       </div>
 
       {/* Time */}
-      <div className="font-mono text-[38px] font-light tracking-[-2px] leading-none">
+      <div className="font-mono text-[60px] font-light tracking-[-4px] leading-none">
         {hh}:{mm}
       </div>
     </div>

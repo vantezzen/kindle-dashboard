@@ -6,8 +6,8 @@ import type { TransitData, TransitDeparture, TransitAlert } from "@/lib/types";
 function TrainIcon() {
   return (
     <svg
-      width={11}
-      height={11}
+      width={17}
+      height={17}
       viewBox="0 0 16 16"
       fill="none"
       stroke="currentColor"
@@ -37,7 +37,7 @@ function LineBadge({
   return (
     <span
       className={cn(
-        "font-mono text-[8px] font-bold h-[16px] min-w-[26px] inline-flex items-center justify-center border border-foreground rounded-full px-[3px] shrink-0 leading-none tracking-[-0.3px]",
+        "font-mono text-[14px] font-bold h-7 min-w-10 inline-flex items-center justify-center border border-foreground rounded-full px-1.5 shrink-0 leading-none tracking-[-0.3px]",
         isRegional && "bg-foreground text-background border-foreground",
       )}
     >
@@ -55,23 +55,23 @@ function DepartureRow({ dep }: { dep: TransitDeparture }) {
     dep.lineProduct === "regional" || dep.lineProduct === "express";
 
   return (
-    <div className="flex items-center gap-1.5 py-[2px]">
+    <div className="flex items-center gap-2 py-1.5">
       <LineBadge name={dep.lineName} isRegional={isRegionalTrain} />
 
       {/* Direction */}
       <span
         className={cn(
-          "text-[9px] flex-1 truncate",
+          "text-[18px] flex-1 truncate",
           isCancelled && "line-through text-muted-foreground",
         )}
       >
-        {dep.direction}
+        {dep.direction.replace(/^(U|S|RB|RE|ICE|IC|T)\s?/, "")}
       </span>
 
       {/* Time */}
       <span
         className={cn(
-          "font-mono text-[9px] shrink-0 text-right",
+          "font-mono text-[18px] shrink-0 text-right",
           isCancelled
             ? "text-muted-foreground line-through"
             : isDelayed
@@ -92,8 +92,8 @@ function DepartureRow({ dep }: { dep: TransitDeparture }) {
 
 function AlertBox({ alert }: { alert: TransitAlert }) {
   return (
-    <div className="flex items-start gap-1.5 px-1.5 py-1 bg-secondary border-l-[2.5px] border-foreground text-[8px] leading-[1.35] text-foreground/80">
-      <span className="font-bold text-[10px] shrink-0 leading-[1.2]">!</span>
+    <div className="flex items-start gap-2 px-2 py-2 bg-secondary border-l-[3px] border-foreground text-[15px] leading-[1.35] text-foreground/80">
+      <span className="font-bold text-[18px] shrink-0 leading-[1.2]">!</span>
       <span>{alert.text}</span>
     </div>
   );
@@ -103,9 +103,9 @@ function AlertBox({ alert }: { alert: TransitAlert }) {
 
 export function TransitSection({ data }: { data: TransitData }) {
   return (
-    <div className="flex-1 flex flex-col px-4 py-2.5 border-l border-border overflow-hidden min-w-0">
+    <div className="flex-1 flex flex-col px-4 py-3 border-l border-border overflow-hidden min-w-0">
       {/* Header */}
-      <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-1.5">
+      <div className="flex items-center gap-2 text-[15px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
         <TrainIcon />
         {process.env.NEXT_PUBLIC_TRANSIT_STATION_NAME ?? "Transit"}
       </div>
@@ -113,7 +113,7 @@ export function TransitSection({ data }: { data: TransitData }) {
       {/* Departures */}
       <div className="flex flex-col">
         {data.departures.length === 0 ? (
-          <div className="text-[9px] text-muted-foreground italic">
+          <div className="text-[15px] text-muted-foreground italic">
             No departures found
           </div>
         ) : (
@@ -123,7 +123,7 @@ export function TransitSection({ data }: { data: TransitData }) {
 
       {/* Alerts */}
       {data.alerts.length > 0 && (
-        <div className="mt-2 flex flex-col gap-1 flex-1 overflow-hidden">
+        <div className="mt-2 flex flex-col gap-1.5 flex-1 overflow-hidden">
           {data.alerts.map((alert) => (
             <AlertBox key={alert.id} alert={alert} />
           ))}
@@ -135,12 +135,12 @@ export function TransitSection({ data }: { data: TransitData }) {
 
 export function TransitSectionFallback() {
   return (
-    <div className="flex-1 px-4 py-2.5 border-l border-border">
-      <div className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-1.5">
+    <div className="flex-1 px-4 py-3 border-l border-border">
+      <div className="flex items-center gap-2 text-[15px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
         <TrainIcon />
         {process.env.NEXT_PUBLIC_TRANSIT_STATION_NAME ?? "Transit"}
       </div>
-      <div className="text-[9px] text-muted-foreground italic">
+      <div className="text-[15px] text-muted-foreground italic">
         Transit data unavailable
       </div>
     </div>
