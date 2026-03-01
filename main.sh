@@ -24,7 +24,7 @@ DASHBOARD_URL="http://localhost:${SERVER_PORT}" bun scripts/capture.mjs
 
 # Convert to 8-bit grayscale — eips expects 1 byte/pixel matching the Kindle framebuffer.
 # Without this, a 24-bit RGB PNG is read as raw bytes and appears 3x wider than the screen.
-convert "$OUTPUT" -colorspace Gray -depth 8 -type Grayscale -alpha Off "$OUTPUT"
+convert "$OUTPUT" -colorspace Gray -depth 8 -type Grayscale -alpha Off -rotate 180 "$OUTPUT"
 
 # ── 2. Kindle fetches the PNG from this server and displays it ───────────────
 echo "[$(date '+%H:%M:%S')] Pushing to Kindle ($KINDLE_IP)..."
