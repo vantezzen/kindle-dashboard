@@ -41,8 +41,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openssh-client \
     sshpass \
     cron \
-    imagemagick \
-    && rm -rf /var/lib/apt/lists/*
+    imagemagick
+RUN rm -rf /var/lib/apt/lists/*
 
 # ── Next.js standalone bundle ─────────────────────────────────────────────────
 COPY --from=builder /app/.next/standalone ./
