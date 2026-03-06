@@ -107,7 +107,7 @@ export function TransitSection({ data }: { data: TransitData }) {
       {/* Header */}
       <div className="flex items-center gap-2 text-[15px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
         <TrainIcon />
-        {process.env.NEXT_PUBLIC_TRANSIT_STATION_NAME ?? "Transit"}
+        Transit
       </div>
 
       {/* Departures */}
@@ -138,7 +138,7 @@ export function TransitSectionFallback() {
     <div className="flex-1 px-4 py-3 border-l border-border">
       <div className="flex items-center gap-2 text-[15px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
         <TrainIcon />
-        {process.env.NEXT_PUBLIC_TRANSIT_STATION_NAME ?? "Transit"}
+        Transit
       </div>
       <div className="text-[15px] text-muted-foreground italic">
         Transit data unavailable

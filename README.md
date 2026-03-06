@@ -94,7 +94,6 @@ No configuration needed — the BVG public API requires no key.
 ```bash
 # .env.local
 TRANSIT_STATION_ID=900100003  # e.g. Alexanderplatz
-NEXT_PUBLIC_TRANSIT_STATION_NAME=Alexanderplatz  # for display in the header
 ```
 
 To find a stop ID, query the API:
