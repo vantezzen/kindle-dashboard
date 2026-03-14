@@ -4,7 +4,7 @@ services:
     # Explicitly target ARM64 for Raspberry Pi.
     # On Apple Silicon this builds natively; on Intel Mac use:
     #   docker buildx build --platform linux/arm64 -t kindle-dashboard .
-    platform: linux/arm64
+    # platform: linux/arm64
     restart: unless-stopped
 
     # Optionally expose the dashboard on localhost:3000 for testing without pushing to the Kindle.
