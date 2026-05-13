@@ -46,16 +46,16 @@ export function DashboardHeader({ now }: HeaderProps) {
     <div className="flex items-end justify-between px-5 pt-5 pb-3 border-b-2 border-black">
       {/* Date */}
       <div>
-        <div className="text-[14px] uppercase tracking-widest text-muted-foreground mb-1">
+        <div className="text-[14px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
           {dayName}
         </div>
-        <div className="text-[32px] font-semibold tracking-tight leading-tight">
+        <div className="text-[32px] font-bold tracking-tight leading-tight">
           {dayNum} {monthName}
         </div>
       </div>
 
       {/* Time */}
-      <div className="font-mono text-[60px] font-light tracking-[-4px] leading-none">
+      <div className="font-mono text-[60px] font-bold leading-none">
         {hh}:{mm}
       </div>
     </div>

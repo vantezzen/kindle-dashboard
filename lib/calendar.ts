@@ -1,6 +1,8 @@
 import { google } from "googleapis";
 import type { CalendarDay, CalendarEvent } from "./types";
 
+const HOUR_MS = 60 * 60 * 1000;
+
 // ── Config ────────────────────────────────────────────────────────────────────
 // Calendar IDs to include — comma-separated in env var, defaults to "primary"
 function getCalendarIds(): string[] {
@@ -107,7 +109,7 @@ export async function fetchCalendarEvents(): Promise<CalendarDay[]> {
         ? item.start?.date + "T00:00:00"
         : (item.start?.dateTime ?? "");
       const endRaw = isAllDay
-        ? (item.end?.date ?? item.start?.date) + "T23:59:59"
+        ? (item.end?.date ?? item.start?.date) + "T00:00:00"
         : (item.end?.dateTime ?? startRaw);
 
       if (!startRaw) continue;
@@ -136,6 +138,7 @@ export async function fetchCalendarEvents(): Promise<CalendarDay[]> {
       title: raw.summary ?? "(No title)",
       startTime: isAllDay ? null : toLocalTime(start),
       endTime: isAllDay ? null : toLocalTime(end),
+      durationHours: Math.max((end.getTime() - start.getTime()) / HOUR_MS, 0),
       location: raw.location ?? undefined,
       isNow,
       isAllDay,

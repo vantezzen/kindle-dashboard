@@ -1,18 +1,26 @@
-import { cn } from "@/lib/utils";
 import type { WeatherData } from "@/lib/types";
 import { WeatherIcon } from "./weather-icons";
 
-// ── Section label ─────────────────────────────────────────────────────────────
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-[16px] font-semibold uppercase tracking-[1.5px] text-muted-foreground mb-2">
+    <div className="text-[14px] font-bold uppercase tracking-[1.5px] text-muted-foreground mb-2">
       {children}
     </div>
   );
 }
 
-// ── Current conditions ────────────────────────────────────────────────────────
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <div className="text-[11px] font-bold uppercase tracking-[0.8px] text-muted-foreground leading-none">
+        {label}
+      </div>
+      <div className="mt-0.5 font-mono text-[13px] font-bold leading-none truncate">
+        {value}
+      </div>
+    </div>
+  );
+}
 
 function CurrentWeather({
   data,
@@ -24,60 +32,162 @@ function CurrentWeather({
   sunset: string;
 }) {
   return (
-    <div className="flex items-center gap-4">
-      <WeatherIcon type={data.iconType} size={72} />
+    <div>
+      <div className="flex items-center gap-2">
+        <WeatherIcon type={data.iconType} size={58} />
 
-      <div
-        className="font-mono text-[72px] font-extralight leading-none"
-        style={{ letterSpacing: "-3px" }}
-      >
-        {data.temperature}°
+        <div className="font-mono text-[54px] font-bold leading-none">
+          {data.temperature}°
+        </div>
       </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="text-[20px] font-medium mb-1.5">{data.description}</div>
-        <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[15px] text-muted-foreground font-mono">
-          <span>Feels {data.apparentTemperature}°</span>
-          <span>H {data.humidity}%</span>
-          <span>↑ {sunrise}</span>
-          <span>↓ {sunset}</span>
-        </div>
+      <div className="text-[19px] font-bold leading-[1.15] mt-1 truncate">
+        {data.description}
+      </div>
+
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2 mt-3">
+        <Metric label="Feels" value={`${data.apparentTemperature}°`} />
+        <Metric label="Wind" value={`${data.windSpeed} km/h`} />
+        <Metric label="Humidity" value={`${data.humidity}%`} />
+        <Metric label="Sun" value={`${sunrise}-${sunset}`} />
       </div>
     </div>
   );
 }
 
-// ── Hourly row ────────────────────────────────────────────────────────────────
+function HourlyChart({ hourly }: { hourly: WeatherData["hourly"] }) {
+  const hours = hourly.slice(0, 6);
+  if (hours.length === 0) return null;
 
-function HourlyRow({ hourly }: { hourly: WeatherData["hourly"] }) {
+  const temperatures = hours.map((hour) => hour.temperature);
+  const low = Math.min(...temperatures);
+  const high = Math.max(...temperatures);
+  const minTemp = Math.floor((low - 2) / 5) * 5;
+  const maxTemp = Math.ceil((high + 2) / 5) * 5;
+  const tempRange = Math.max(maxTemp - minTemp, 1);
+  const chartWidth = 260;
+  const plotLeft = 16;
+  const plotRight = 216;
+  const plotTop = 14;
+  const plotBottom = 76;
+  const labelX = 228;
+
+  const points = hours.map((hour, index) => {
+    const x =
+      hours.length === 1
+        ? plotLeft
+        : plotLeft + (index / (hours.length - 1)) * (plotRight - plotLeft);
+    const y =
+      plotTop +
+      ((maxTemp - hour.temperature) / tempRange) * (plotBottom - plotTop);
+
+    return { x, y, temperature: hour.temperature, hour: hour.hour };
+  });
+
+  const linePath = points
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+    .join(" ");
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${plotBottom} L ${points[0].x} ${plotBottom} Z`;
+  const ticks = [maxTemp, Math.round((maxTemp + minTemp) / 2), minTemp];
+
   return (
-    <div className="flex justify-between mt-3 pt-3 border-t border-border">
-      {hourly.slice(0, 6).map((h, i) => (
-        <div key={i} className="flex flex-col items-center gap-1 flex-1">
-          <span className="font-mono text-[15px] text-muted-foreground font-medium">
-            {h.hour}
-          </span>
-          <div className="flex gap-3">
-            <WeatherIcon type={h.iconType} size={30} />
-
-            <span className="font-mono text-[18px] font-semibold">
-              {h.temperature}°
+    <div className="mt-4 pt-3 border-t border-border">
+      <SectionLabel>Next Hours</SectionLabel>
+      <div className="relative mb-1 h-[34px]">
+        {hours.map((hour, index) => (
+          <div
+            key={index}
+            className="absolute top-0 flex w-4 -translate-x-1/2 flex-col items-center gap-0.5"
+            style={{ left: `${(points[index].x / chartWidth) * 100}%` }}
+          >
+            <WeatherIcon type={hour.iconType} size={16} />
+            <span className="font-mono text-[11px] font-bold text-muted-foreground">
+              {hour.precipitationProbability !== null
+                ? `${hour.precipitationProbability}%`
+                : "0%"}
             </span>
-            {h.precipitationProbability !== null && (
-              <span className="font-mono text-[14px] text-muted-foreground">
-                {h.precipitationProbability}%
-              </span>
-            )}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      <svg
+        viewBox={`0 0 ${chartWidth} 98`}
+        className="block w-full h-[98px]"
+        role="img"
+        aria-label="Hourly temperature chart"
+      >
+        <rect
+          x={plotLeft}
+          y={plotTop}
+          width={plotRight - plotLeft}
+          height={plotBottom - plotTop}
+          fill="white"
+        />
+        {ticks.map((tick) => {
+          const y =
+            plotTop + ((maxTemp - tick) / tempRange) * (plotBottom - plotTop);
+
+          return (
+            <g key={tick}>
+              <line
+                x1={plotLeft}
+                x2={plotRight}
+                y1={y}
+                y2={y}
+                stroke="currentColor"
+                className="text-border"
+                strokeWidth="1"
+              />
+              <text
+                x={labelX}
+                y={y + 4}
+                fill="currentColor"
+                className="text-muted-foreground"
+                style={{ fontSize: 11, fontWeight: 700 }}
+              >
+                {tick}°
+              </text>
+            </g>
+          );
+        })}
+        <path d={areaPath} fill="currentColor" className="text-secondary" />
+        <path
+          d={linePath}
+          fill="none"
+          stroke="currentColor"
+          className="text-foreground"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {points.map((point, index) => (
+          <g key={index}>
+            <circle
+              cx={point.x}
+              cy={point.y}
+              r="4"
+              fill="white"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            />
+            <text
+              x={point.x}
+              y={94}
+              textAnchor="middle"
+              fill="currentColor"
+              className="text-muted-foreground"
+              style={{ fontSize: 11, fontWeight: 700 }}
+            >
+              {point.hour}
+            </text>
+          </g>
+        ))}
+      </svg>
     </div>
   );
 }
 
-// ── Forecast grid (2 columns, 4 days) ─────────────────────────────────────────
-
-function ForecastGrid({
+function ForecastRows({
   forecast,
   tempRangeMin,
   tempRangeMax,
@@ -87,57 +197,43 @@ function ForecastGrid({
   tempRangeMax: number;
 }) {
   const range = Math.max(tempRangeMax - tempRangeMin, 1);
-  const days = forecast.slice(0, 4);
+  const days = forecast.slice(0, 6);
 
   return (
-    <div className="px-5 pt-3 border-t border-border">
+    <div className="mt-3 pt-3 border-t border-border">
       <SectionLabel>Forecast</SectionLabel>
-      <div className="grid grid-cols-2 gap-x-px gap-y-px bg-border">
-        {days.map((f, i) => {
+      <div className="flex flex-col divide-y divide-border/70">
+        {days.map((f) => {
           const leftPct = ((f.tempLow - tempRangeMin) / range) * 100;
           const widthPct = Math.max(
             ((f.tempHigh - f.tempLow) / range) * 100,
-            8,
+            10,
           );
-          const isBottomRow = i >= 2;
+          const adjustedLeftPct = Math.min(leftPct, 100 - widthPct);
 
           return (
             <div
-              key={i}
-              className={cn(
-                "flex items-center gap-2 py-1.5 bg-white px-3",
-                isBottomRow && "pb-3",
-              )}
+              key={f.day}
+              className="grid grid-cols-[50px_1fr] items-center gap-2 py-1.5"
             >
-              {/* Day label */}
-              <span className="text-[18px] font-semibold w-12 shrink-0">
+              <span className="text-[16px] font-bold leading-none truncate">
                 {f.day}
               </span>
-              <div className="flex-1"></div>
 
-              {/* Icon */}
-              <WeatherIcon type={f.iconType} size={22} />
-
-              {/* Description */}
-              {/* <span className="text-[15px] text-muted-foreground flex-1 truncate">
-                {f.description}
-              </span> */}
-
-              {/* Temp range */}
-              <div className="flex items-center gap-1 shrink-0">
-                <span className="font-mono text-[15px] text-muted-foreground w-7 text-right">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="font-mono text-[13px] font-bold text-muted-foreground w-7 text-right">
                   {f.tempLow}°
                 </span>
-                <div className="w-10 h-[5px] bg-secondary rounded-full relative overflow-hidden">
+                <div className="h-[8px] flex-1 bg-secondary rounded-full relative overflow-hidden">
                   <div
                     className="absolute top-0 h-full bg-foreground rounded-full"
                     style={{
-                      left: `${leftPct}%`,
+                      left: `${adjustedLeftPct}%`,
                       width: `${widthPct}%`,
                     }}
                   />
                 </div>
-                <span className="font-mono text-[15px] font-semibold w-7">
+                <span className="font-mono text-[13px] font-bold w-7">
                   {f.tempHigh}°
                 </span>
               </div>
@@ -149,37 +245,33 @@ function ForecastGrid({
   );
 }
 
-// ── Composed section ──────────────────────────────────────────────────────────
-
 export function WeatherSection({ data }: { data: WeatherData }) {
   return (
-    <>
-      {/* Current + hourly */}
-      <div className="px-5 py-3">
-        <CurrentWeather
-          data={data.current}
-          sunrise={data.sunrise}
-          sunset={data.sunset}
-        />
-        <HourlyRow hourly={data.hourly} />
+    <div className="flex-1 basis-0 flex flex-col px-4 py-3 border-l border-border overflow-hidden min-w-0">
+      <div className="flex items-center gap-2 text-[15px] font-bold uppercase tracking-[1.5px] text-muted-foreground mb-3">
+        <WeatherIcon type={data.current.iconType} size={17} />
+        Weather
       </div>
 
-      {/* Forecast */}
-      <ForecastGrid
+      <CurrentWeather
+        data={data.current}
+        sunrise={data.sunrise}
+        sunset={data.sunset}
+      />
+      <HourlyChart hourly={data.hourly} />
+      <ForecastRows
         forecast={data.forecast}
         tempRangeMin={data.tempRangeMin}
         tempRangeMax={data.tempRangeMax}
       />
-    </>
+    </div>
   );
 }
 
-// ── Fallback when data is unavailable ────────────────────────────────────────
-
 export function WeatherSectionFallback() {
   return (
-    <div className="px-5 py-3 text-[15px] text-muted-foreground italic">
-      Weather data unavailable.
+    <div className="flex-1 basis-0 px-4 py-3 border-l border-border text-[15px] font-bold text-muted-foreground italic">
+      Weather unavailable
     </div>
   );
 }

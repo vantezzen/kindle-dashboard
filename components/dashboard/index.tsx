@@ -1,22 +1,20 @@
-import type { WeatherData, CalendarDay, TransitData } from "@/lib/types";
+import type { WeatherData, CalendarDay } from "@/lib/types";
 // import { getDailyQuote } from "@/lib/quotes";
 import { DashboardHeader } from "./header";
 import { WeatherSection, WeatherSectionFallback } from "./weather-section";
 import { CalendarSection, CalendarSectionFallback } from "./calendar-section";
-import { TransitSection, TransitSectionFallback } from "./transit-section";
+import { DailyFocusSection } from "./daily-focus-section";
 
 interface KindleDashboardProps {
   now: string; // ISO string, set on server
   weather: WeatherData | null;
   calendarDays: CalendarDay[] | null;
-  transitData: TransitData | null;
 }
 
 export default function KindleDashboard({
   now,
   weather,
   calendarDays,
-  transitData,
 }: KindleDashboardProps) {
   // const quote = getDailyQuote(new Date(now));
   const refreshTime = new Date(now).toLocaleTimeString("de-DE", {
@@ -41,10 +39,10 @@ export default function KindleDashboard({
       {/* ── Header: date + time ───────────────────────────────────────── */}
       <DashboardHeader now={now} />
 
-      {/* ── Weather: current conditions + hourly + forecast ───────────── */}
-      {weather ? <WeatherSection data={weather} /> : <WeatherSectionFallback />}
+      {/* ── Daily focus: full-width overview ──────────────────────────── */}
+      <DailyFocusSection weather={weather} calendarDays={calendarDays} />
 
-      {/* ── Bottom two-column: schedule | transit ─────────────────────── */}
+      {/* ── Bottom two-column: schedule | weather ─────────────────────── */}
       <div className="flex flex-1 min-h-0 border-t border-border">
         {calendarDays ? (
           <CalendarSection days={calendarDays} />
@@ -52,10 +50,10 @@ export default function KindleDashboard({
           <CalendarSectionFallback />
         )}
 
-        {transitData ? (
-          <TransitSection data={transitData} />
+        {weather ? (
+          <WeatherSection data={weather} />
         ) : (
-          <TransitSectionFallback />
+          <WeatherSectionFallback />
         )}
       </div>
 

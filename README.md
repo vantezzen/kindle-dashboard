@@ -4,9 +4,9 @@ A personal e-ink dashboard built with Next.js, designed to be rendered and pushe
 
 ## Features
 
-- **Weather** — Current conditions, 8-hour hourly forecast, and 6-day outlook via [Open-Meteo](https://open-meteo.com/) (no API key required)
+- **Weather** — Current conditions, short-range hourly forecast, and 6-day outlook via [Open-Meteo](https://open-meteo.com/) (no API key required)
 - **Google Calendar** — Upcoming events for the next days across multiple calendars
-- **BVG Transit** — Next departures at Berlin S-Bahn station + disruption alerts via [v6.bvg.transport.rest](https://v6.bvg.transport.rest/)
+- **Daily Focus** — Current/next calendar event, free/busy status, and short weather cues derived from existing data
 - **Date & Time** — Current Berlin local time, rendered server-side
 
 ## How it works
@@ -87,24 +87,7 @@ Find a calendar's ID in Google Calendar: _Settings → [calendar name] → Calen
 
 ---
 
-### 4. Transit / BVG
-
-No configuration needed — the BVG public API requires no key.
-
-```bash
-# .env.local
-TRANSIT_STATION_ID=900100003  # e.g. Alexanderplatz
-```
-
-To find a stop ID, query the API:
-
-```
-https://v6.bvg.transport.rest/locations?query=Ostbahnhof&results=3
-```
-
----
-
-### 5. Run in development
+### 4. Run in development
 
 ```bash
 bun dev
@@ -131,23 +114,6 @@ In the prebuild Docker container, a cronjob will run `main.sh` every minute, whi
 ### Change city / weather location
 
 Edit `lib/weather.ts` — update the `latitude` and `longitude` parameters.
-
-### Change transit station
-
-Set `TRANSIT_STATION_ID` in `.env.local`, or edit the default in `lib/transit.ts`.
-
-### Adjust transit product filters
-
-By default only S-Bahn and regional trains are shown. Edit the product filters in `lib/transit.ts`:
-
-```ts
-suburban: "true",
-subway: "false",
-tram: "false",
-bus: "false",
-```
-
-By default transit searches from 6+ minutes in the future to avoid showing departures that you cannot reach anymore. You can edit this in `lib/transit.ts` as well.
 
 ### Add/change quotes
 

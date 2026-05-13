@@ -49,6 +49,7 @@ export interface CalendarEvent {
   title: string;
   startTime: string | null; // "14:30" or null for all-day
   endTime: string | null;
+  durationHours: number;
   location?: string;
   isNow: boolean;
   isAllDay: boolean;
@@ -57,28 +58,4 @@ export interface CalendarEvent {
 export interface CalendarDay {
   label: string; // "Today", "Tomorrow", "Thu, 28 Feb"
   events: CalendarEvent[];
-}
-
-// ── Transit ──────────────────────────────────────────────────────────────────
-
-export interface TransitDeparture {
-  id: string;
-  lineName: string;
-  lineProduct: string;
-  direction: string;
-  whenDisplay: string; // "14:32", "3 min", "now", "Cancelled"
-  delayMinutes: number | null;
-  platform: string | null;
-  cancelled: boolean;
-}
-
-export interface TransitAlert {
-  id: string;
-  text: string;
-  type: string; // "warning", "hint", "status", etc.
-}
-
-export interface TransitData {
-  departures: TransitDeparture[];
-  alerts: TransitAlert[];
 }
