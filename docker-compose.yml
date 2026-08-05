@@ -12,7 +12,7 @@ services:
     #   - "3000:3000"
 
     env_file:
-      - .env.local
+      - .env
 
     environment:
       HOSTNAME: "0.0.0.0"
