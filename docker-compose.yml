@@ -10,12 +10,17 @@ services:
     # Optionally expose the dashboard on localhost:3000 for testing without pushing to the Kindle.
     # ports:
     #   - "3000:3000"
-
-    env_file:
-      - .env
+    # -
 
     environment:
       HOSTNAME: "0.0.0.0"
+      GOOGLE_CALENDAR_IDS: ${GOOGLE_CALENDAR_IDS:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REFRESH_TOKEN: ${GOOGLE_REFRESH_TOKEN:-}
+      KINDLE_IP: ${KINDLE_IP:-}
+      KINDLE_PASSWORD: ${KINDLE_PASSWORD:-}
+      NEXT_PUBLIC_TIMEZONE: ${NEXT_PUBLIC_TIMEZONE:-}
 
     # volumes:
     # Mount your SSH private key for passwordless login to the Kindle.
