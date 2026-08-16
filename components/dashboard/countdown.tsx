@@ -19,7 +19,7 @@ export function Countdown({ now }: CountdownProps) {
         {dayName}
       </div>
       <div className="text-[20px] font-bold">
-        {days} days, {hours}:{minutes}h
+        {days} days, {hours}h, {minutes}min
       </div>
     </div>
   );
