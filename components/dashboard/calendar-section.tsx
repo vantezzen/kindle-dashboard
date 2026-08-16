@@ -112,12 +112,6 @@ export function CalendarSection({ days }: { days: CalendarDay[] }) {
 
   return (
     <div className="flex-1 basis-0 flex flex-col px-4 py-3 overflow-hidden min-w-0">
-      {/* Header */}
-      <div className="flex items-center gap-2 text-[15px] font-bold uppercase tracking-[1.5px] text-muted-foreground mb-2">
-        <CalendarIcon />
-        Schedule
-      </div>
-
       {/* Events */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {!hasEvents ? (

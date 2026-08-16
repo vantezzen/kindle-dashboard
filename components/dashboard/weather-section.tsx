@@ -45,7 +45,7 @@ function CurrentWeather({
         {data.description}
       </div>
 
-      <div className="grid grid-cols-2 gap-x-3 gap-y-2 mt-3">
+      <div className="flex gap-x-3 gap-y-2 mt-3">
         <Metric label="Feels" value={`${data.apparentTemperature}°`} />
         <Metric label="Wind" value={`${data.windSpeed} km/h`} />
         <Metric label="Humidity" value={`${data.humidity}%`} />
@@ -248,11 +248,6 @@ function ForecastRows({
 export function WeatherSection({ data }: { data: WeatherData }) {
   return (
     <div className="flex-1 basis-0 flex flex-col px-4 py-3 border-l border-border overflow-hidden min-w-0">
-      <div className="flex items-center gap-2 text-[15px] font-bold uppercase tracking-[1.5px] text-muted-foreground mb-3">
-        <WeatherIcon type={data.current.iconType} size={17} />
-        Weather
-      </div>
-
       <CurrentWeather
         data={data.current}
         sunrise={data.sunrise}

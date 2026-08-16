@@ -4,6 +4,7 @@ import { DashboardHeader } from "./header";
 import { WeatherSection, WeatherSectionFallback } from "./weather-section";
 import { CalendarSection, CalendarSectionFallback } from "./calendar-section";
 import { DailyFocusSection } from "./daily-focus-section";
+import { Countdown } from "./countdown";
 
 interface KindleDashboardProps {
   now: string; // ISO string, set on server
@@ -38,6 +39,7 @@ export default function KindleDashboard({
     >
       {/* ── Header: date + time ───────────────────────────────────────── */}
       <DashboardHeader now={now} />
+      <Countdown now={now} />
 
       {/* ── Daily focus: full-width overview ──────────────────────────── */}
       <DailyFocusSection weather={weather} calendarDays={calendarDays} />
